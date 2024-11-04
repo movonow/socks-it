@@ -1,0 +1,12 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="chatroom client" type="GoApplicationRunConfiguration" factoryName="Go Application">
+    <module name="socks-it" />
+    <working_directory value="$PROJECT_DIR$/bin" />
+    <parameters value="-alsoLogToStdout -wsURL ws://127.0.0.1:8088/ws" />
+    <kind value="PACKAGE" />
+    <package value="socks.it/proxy/bin/client" />
+    <directory value="$PROJECT_DIR$" />
+    <filePath value="$PROJECT_DIR$/proxy/bin/server/main.go" />
+    <method v="2" />
+  </configuration>
+</component>

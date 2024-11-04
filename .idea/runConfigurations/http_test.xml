@@ -1,0 +1,12 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="http test" type="GoApplicationRunConfiguration" factoryName="Go Application">
+    <module name="socks-it" />
+    <working_directory value="$PROJECT_DIR$/proxy/test" />
+    <parameters value="-alsoLogToStdout" />
+    <kind value="PACKAGE" />
+    <package value="socks.it/proxy/test" />
+    <directory value="$PROJECT_DIR$" />
+    <filePath value="$PROJECT_DIR$/proxy/test/main.go" />
+    <method v="2" />
+  </configuration>
+</component>

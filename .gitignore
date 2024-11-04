@@ -1,0 +1,15 @@
+# git clean -dfx -e proxy/bin/playground/ -e middlemen/meeting/ -n
+
+/.idea/workspace.xml
+/bin/
+/proxy/bin/playground/
+/middlemen/meeting/
+certs/
+run/
+*.log
+*.exe
+*.out
+*.prof
+*.trace
+*.zip
+qodana.yaml

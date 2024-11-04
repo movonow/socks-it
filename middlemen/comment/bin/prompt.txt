@@ -1,0 +1,48 @@
+implementation for the topic discussion web server:
+
+Requirements:
+Basic Topic-Discussion Application:
+
+Create a Go-based web server that manages discussion topics.
+Topics have a title, content, and a list of comments.
+Topics should be stored in memory (no database required).
+Users can create topics and add comments to topics.
+Comment Functionality:
+
+Each topic has a list of comments with an author, content, and timestamp.
+A cap on the number of comments per topic (e.g., 5 comments max), meaning new comments will overwrite the oldest ones.
+Use container/ring to implement a circular buffer for storing comments.
+Global Incrementing Comment IDs:
+
+Ensure that comment IDs are globally unique and always increment.
+New comments across all topics should have unique IDs.
+Endpoints:
+
+Create a topic (/topics/create): Allows users to create new topics.
+List all topics (/topics): Fetches all topics.
+Get a specific topic by ID (/topic?id=<id>): Returns a single topic's details.
+Add a comment to a topic (/topic/comment?id=<id>): Adds a comment to a topic.
+Get all comments for a topic (/topic/comments?id=<id>): Fetches all comments for a topic.
+Fetch a batch of comments by ID range (/topic/comments/range?id=<id>&start=<start>&end=<end>): Fetches comments within a specific ID range.
+Get the latest comment ID (/topic/comments/latest?id=<id>): Fetches the ID of the latest comment on a topic.
+Implementation Details:
+Circular Buffer for Comments:
+
+container/ring is used to limit the number of comments stored per topic to a fixed number (e.g., 5). New comments will overwrite the oldest ones.
+Global Comment ID:
+
+Introduced a global globalCommentID to ensure unique, ever-increasing IDs for comments across all topics.
+Endpoints:
+
+The following endpoints were added to meet the requirements:
+Create a topic: Users can create a new topic with a title and content.
+List all topics: Fetches all available topics.
+Get a specific topic: Returns the details of a specific topic, including its comments.
+Add a comment: Allows users to add a comment to a topic. Each comment has a unique, globally incremented ID.
+Get comments by ID range: Allows fetching a batch of comments by providing an ID range.
+Get the latest comment ID: Fetches the most recent comment's ID for a given topic.
+Summary of Code Changes:
+Topics and comments are stored in-memory using Go structs.
+container/ring is used to limit the number of comments stored per topic.
+A global globalCommentID ensures each comment gets a unique ID.
+Several HTTP endpoints are created to support operations like creating topics, adding comments, fetching comments by range, and querying the latest comment ID.

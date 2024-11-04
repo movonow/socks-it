@@ -1,0 +1,12 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="comment service" type="GoApplicationRunConfiguration" factoryName="Go Application">
+    <module name="socks-it" />
+    <working_directory value="$PROJECT_DIR$/middlemen/comment" />
+    <parameters value="-alsoLogToStdout" />
+    <kind value="PACKAGE" />
+    <package value="socks.it/comment/bin" />
+    <directory value="$PROJECT_DIR$" />
+    <filePath value="$PROJECT_DIR$/middlemen/comment/bin/main.go" />
+    <method v="2" />
+  </configuration>
+</component>

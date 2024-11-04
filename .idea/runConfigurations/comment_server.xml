@@ -1,0 +1,12 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="comment server" type="GoApplicationRunConfiguration" factoryName="Go Application">
+    <module name="socks-it" />
+    <working_directory value="$PROJECT_DIR$/bin" />
+    <parameters value="-alsoLogToStdout -readTopic &quot;I am fine.&quot; -writeTopic &quot;How are you?&quot;" />
+    <kind value="PACKAGE" />
+    <package value="socks.it/proxy/bin/server" />
+    <directory value="$PROJECT_DIR$" />
+    <filePath value="$PROJECT_DIR$/proxy/bin/server/main.go" />
+    <method v="2" />
+  </configuration>
+</component>

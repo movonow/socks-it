@@ -1,0 +1,12 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="nothing client" type="GoApplicationRunConfiguration" factoryName="Go Application">
+    <module name="socks-it" />
+    <working_directory value="$PROJECT_DIR$/bin" />
+    <parameters value="-alsoLogToStdout -wsURL wss://127.0.0.1:10443/ws -caCertPath certs/ca.crt -clientCertPath certs/client.crt -clientKeyPath certs/client.key -logLevel Info" />
+    <kind value="PACKAGE" />
+    <package value="socks.it/proxy/bin/client" />
+    <directory value="$PROJECT_DIR$" />
+    <filePath value="$PROJECT_DIR$/proxy/bin/server/main.go" />
+    <method v="2" />
+  </configuration>
+</component>
