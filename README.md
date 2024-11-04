@@ -58,5 +58,3 @@ This is the data transmission channel between tools and the Middleman, such as t
 When a browser accesses a page, it typically initiates multiple TCP connection requests to different servers for various resources, with each connection corresponding to a Tunnel. The [Tunnel](proxy/bin/internal/tunnel.go) is an abstraction built on top of [Transport](proxy/transport.go), where all Tunnels usually share a single Transport instance.
 
 ---
-
-This translation maintains the structure and details of the original text while making it accessible to an English-speaking audience. If you need further modifications or additional information, feel free to ask!
