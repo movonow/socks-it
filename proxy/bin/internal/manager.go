@@ -131,7 +131,7 @@ func (m *Manager) Setup(middleman proxy.Middleman) error {
 		case firstErr = <-pullErrChan:
 		case firstErr = <-pushErrChan:
 		case <-exitNotify:
-			return errUserCancelled
+			firstErr = errUserCancelled
 		}
 
 		select {
