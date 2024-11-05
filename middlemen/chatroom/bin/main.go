@@ -10,9 +10,14 @@ import (
 	"log"
 	"log/slog"
 	"net/http"
+	"net/url"
 	"socks.it/utils/logs"
 	"time"
 )
+
+var logLevel = flag.String("logLevel", "Debug", "Set log level: [Debug,Info,Warn,Error]")
+var wsURL = flag.String("wsURL", "ws://localhost:8088/ws", "chatroom Service URL")
+var home = flag.String("home", "/home", "home url")
 
 const (
 	// Time allowed to write a message to the peer.
@@ -187,10 +192,6 @@ func (h *Hub) run() {
 	}
 }
 
-var logLevel = flag.String("logLevel", "Debug", "Set log level: [Debug,Info,Warn,Error]")
-var addr = flag.String("addr", "localhost:8088", "http service address")
-var home = flag.String("home", "/home", "home url")
-
 func serveHome(w http.ResponseWriter, r *http.Request) {
 	log.Println(r.URL)
 	if r.URL.Path != *home {
@@ -209,16 +210,21 @@ var logger *slog.Logger
 func main() {
 	flag.Parse()
 
+	parsedWsURL, err := url.Parse(*wsURL)
+	if err != nil {
+		log.Fatalf("failed to parse wsURL: %v", err)
+	}
+
 	logger = logs.GetLogger("chatroom.log", *logLevel)
 
 	hub := newHub()
 	go hub.run()
 	http.HandleFunc(*home, serveHome)
-	http.HandleFunc("/ws", func(w http.ResponseWriter, r *http.Request) {
+	http.HandleFunc(parsedWsURL.Path, func(w http.ResponseWriter, r *http.Request) {
 		serveWs(hub, w, r)
 	})
-	logger.Info("serving websocket", "address", *addr)
+	logger.Info("serving websocket", "url", *wsURL)
 
 	logger.Error("stop serving websocket", "error",
-		http.ListenAndServe(*addr, nil))
+		http.ListenAndServe(parsedWsURL.Host, nil))
 }
