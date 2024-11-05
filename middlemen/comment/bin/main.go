@@ -111,6 +111,8 @@ func getTopicHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	logger.Info("query topic", "title", topicTitleStr, "from", r.RemoteAddr)
+
 	var topic *Topic
 	mu.Lock()
 	for _, item := range topics {

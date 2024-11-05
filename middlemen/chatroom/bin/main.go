@@ -165,11 +165,11 @@ func (h *Hub) run() {
 	for {
 		select {
 		case client := <-h.register:
-			logger.Info("client register")
+			logger.Info("client register", "from", client.conn.RemoteAddr())
 			h.clients[client] = true
 		case client := <-h.unregister:
 			if _, ok := h.clients[client]; ok {
-				logger.Info("client unregister")
+				logger.Info("client unregister", "from", client.conn.RemoteAddr())
 				delete(h.clients, client)
 				close(client.send)
 			}
