@@ -57,7 +57,7 @@ type Manager struct {
 	pushChan   chan *Bundle
 
 	tunnelTable map[string]*Tunnel
-	tunnelLock  sync.Mutex //fixme: 2024/10/19 必要性
+	tunnelLock  sync.Mutex
 }
 
 func New(name, peer string, logger *slog.Logger) *Manager {

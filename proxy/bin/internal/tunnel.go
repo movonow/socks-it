@@ -36,8 +36,8 @@ type Tunnel struct {
 
 	messageID int
 
-	nextPullID  int
-	messageList list.List
+	nextPullID   int
+	reorderQueue list.List
 
 	pushChan chan *Bundle
 	pullChan chan []byte // resides in each Tunnel
@@ -183,9 +183,9 @@ type bufferedPacket struct {
 }
 
 func (t *Tunnel) pull(head *tunnelHead, data []byte) {
-	// limit packets count.
-	if t.messageList.Len() > proxy.PullChanSize {
-		t.logger.Warn("pull buffer queue is full")
+	const reorderQueueSize = 128
+	if t.reorderQueue.Len() > reorderQueueSize {
+		t.logger.Warn("reach reorder queue limit", "size", reorderQueueSize, "head", head)
 		return
 	}
 
@@ -198,9 +198,9 @@ func (t *Tunnel) pull(head *tunnelHead, data []byte) {
 
 	// reorder
 	if t.nextPullID < head.MessageID {
-		t.logger.Debug("out of order", "want", t.nextPullID, "read", head.MessageID)
+		t.logger.Info("out of order packet", "want", t.nextPullID, "read", head.MessageID)
 
-		node := t.messageList.Front()
+		node := t.reorderQueue.Front()
 		for ; node != nil; node = node.Next() {
 			if node.Value.(*bufferedPacket).head.MessageID > head.MessageID {
 				break
@@ -208,17 +208,17 @@ func (t *Tunnel) pull(head *tunnelHead, data []byte) {
 		}
 
 		if node != nil {
-			t.messageList.InsertBefore(value, node)
+			t.reorderQueue.InsertBefore(value, node)
 		} else {
-			t.messageList.PushBack(value)
+			t.reorderQueue.PushBack(value)
 		}
 
 		return
 	}
 
-	t.messageList.PushFront(value)
+	t.reorderQueue.PushFront(value)
 
-	node := t.messageList.Front()
+	node := t.reorderQueue.Front()
 loop:
 	for node != nil {
 		message := node.Value.(*bufferedPacket)
@@ -229,11 +229,11 @@ loop:
 		case t.pullChan <- message.data:
 			//t.logger.Debug("pulled packet", "id", message.head.MessageID)
 			next := node.Next()
-			t.messageList.Remove(node)
+			t.reorderQueue.Remove(node)
 			node = next
 			t.nextPullID++
 		default:
-			t.logger.Warn("pullChan is full")
+			t.logger.Warn("reach pull channel limit", "size", proxy.PullChanSize, "head", head)
 			break loop
 		}
 	}
