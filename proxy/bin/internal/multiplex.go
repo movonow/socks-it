@@ -9,7 +9,7 @@ import (
 	"socks.it/utils/errs"
 )
 
-type routeDecorator struct {
+type multiplexerDecorator struct {
 	*proxy.ReadonlyDecorator
 	logger     *slog.Logger
 	writeHead  tunnelHead
@@ -17,22 +17,22 @@ type routeDecorator struct {
 	metaLength int
 }
 
-func newRouteDecorator(lower proxy.Transporter, logger *slog.Logger) *routeDecorator {
-	return &routeDecorator{
+func newMultiplexer(lower proxy.Transporter, logger *slog.Logger) *multiplexerDecorator {
+	return &multiplexerDecorator{
 		ReadonlyDecorator: proxy.NewReadonlyTransport(lower),
 		logger:            logger,
 	}
 }
 
-func (d *routeDecorator) setWriteHead(h *tunnelHead) {
+func (d *multiplexerDecorator) setWriteHead(h *tunnelHead) {
 	d.writeHead = *h
 }
 
-func (d *routeDecorator) ReadHead() tunnelHead {
+func (d *multiplexerDecorator) ReadHead() tunnelHead {
 	return d.readHead
 }
 
-func (d *routeDecorator) MetaLength() int {
+func (d *multiplexerDecorator) MetaLength() int {
 	if d.metaLength == 0 {
 		var longestCommand string
 		for i := CommandBegin + 1; i < CommandEnd; i++ {
@@ -59,7 +59,7 @@ func (d *routeDecorator) MetaLength() int {
 	return d.metaLength
 }
 
-func (d *routeDecorator) NextWriter() (io.WriteCloser, error) {
+func (d *multiplexerDecorator) NextWriter() (io.WriteCloser, error) {
 	lower, err := d.ReadonlyDecorator.NextWriter()
 	if err != nil {
 		return nil, err
@@ -81,7 +81,7 @@ func (d *routeDecorator) NextWriter() (io.WriteCloser, error) {
 	return lower, nil
 }
 
-func (d *routeDecorator) NextReader() (io.Reader, error) {
+func (d *multiplexerDecorator) NextReader() (io.Reader, error) {
 	r, err := d.ReadonlyDecorator.NextReader()
 	if err != nil {
 		return nil, err
@@ -109,7 +109,7 @@ func (d *routeDecorator) NextReader() (io.Reader, error) {
 	return r, nil
 }
 
-func (d *routeDecorator) Close() error {
+func (d *multiplexerDecorator) Close() error {
 	d.logger.Info("route closed")
 	return d.ReadonlyDecorator.Close()
 }
