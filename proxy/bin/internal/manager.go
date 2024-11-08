@@ -81,7 +81,7 @@ func (m *Manager) Setup(middleman proxy.Middleman) error {
 	transportClosed := atomic.Bool{}
 	exitNotify := make(chan struct{})
 	exitDone := make(chan struct{})
-	var transport *multiplexerDecorator
+	var transport *multiplexDecorator
 
 	atexit.Register(func() {
 		close(exitNotify)
@@ -239,7 +239,7 @@ func (m *Manager) newTunnel(name string) *Tunnel {
 
 type exitEvent struct{}
 
-func (m *Manager) pushPump(transport *multiplexerDecorator, errChan chan<- error) {
+func (m *Manager) pushPump(transport *multiplexDecorator, errChan chan<- error) {
 	pollFunc := func() error {
 		select {
 		case bundle, ok := <-m.pushChan:
@@ -286,7 +286,7 @@ func (m *Manager) pushPump(transport *multiplexerDecorator, errChan chan<- error
 	}
 }
 
-func (m *Manager) pullPump(transport *multiplexerDecorator, errChan chan<- error) {
+func (m *Manager) pullPump(transport *multiplexDecorator, errChan chan<- error) {
 	pollFunc := func() error {
 		r, err := transport.NextReader()
 		if err != nil {
